@@ -1,0 +1,9 @@
+//create a self-signed CA
+openssl req -sha256 -newkey rsa:2048 -nodes -keyout privatekey.pem -x509 -days 360 -out CA.pem
+//extract the public key from CA key pair
+openssl rsa -in privatekey.pem -pubout -out publickey.pem
+
+//create a csr
+openssl req -out user.csr -new -newkey rsa:2048 -nodes -keyout user.key
+//sign the csr with CA's self-signed key
+openssl x509 -req -days 360 -in user.csr -CA CA.pem -CAkey privatekey.pem -CAcreateserial -out user.pem -sha256
